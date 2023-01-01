@@ -1,0 +1,140 @@
+.game_block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+
+  &.green {
+    background-color: #ccffe4;
+  }
+
+  &.blue {
+    background-color: #cce6ff;
+  }
+
+  &.red {
+    background-color: #ffcccc;
+  }
+
+  &.yellow {
+    background-color: #fff9cc;
+  }
+
+  .info_block {
+    display: flex;
+    flex-direction: column;
+
+    svg {
+      width: 40px;
+      height: 40px;
+      margin-left: 20px;
+      user-select: none;
+      padding: 4px;
+      fill: #ff6768;
+      cursor: pointer;
+    }
+  }
+}
+
+.game_board {
+  background-color: #fff7f7;
+  border-radius: 36px;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+
+  .row {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .point {
+    border: 4px solid #878787;
+    margin: 10px;
+    border-radius: 50%;
+    box-sizing: border-box;
+    position: relative;
+
+    &:after {
+      content: "";
+      border: 4px solid var(--clr, #878787);
+      display: flex;
+      border-radius: 50%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
+    }
+    &.colored:after {
+      border: 6px solid var(--clr, #878787);
+    }
+    &:before {
+      content: "";
+      border: 20px solid #fff7f7;
+      display: flex;
+      border-radius: 50%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
+    }
+
+    &:not(.without):not(.colored):hover:before {
+      content: "";
+      border: 16px solid var(--hoverclr, #878787);
+      z-index: 10;
+      cursor: pointer;
+    }
+
+    span {
+
+    }
+
+    &:hover:not(.green):not(.blue):not(.red):not(.yellow):not(.without) {
+      //border: 2px dashed #646464;
+      //margin: 10px;
+    }
+
+    //&:hover:not(.green):not(.blue):not(.red):not(.yellow):not(.without) {
+    //  border: 2px dashed #646464;
+    //  cursor: pointer;
+    //}
+    //
+    //&.green {
+    //  background-color: #28cc75;
+    //  cursor: default;
+    //}
+    //
+    //&.blue {
+    //  background-color: #298eea;
+    //  cursor: default;
+    //}
+    //
+    //&.red {
+    //  background-color: #ff6768;
+    //  cursor: default;
+    //}
+    //
+    //&.yellow {
+    //  background-color: #feee7d;
+    //  cursor: default;
+    //}
+
+    //&.hover_green:hover {
+    //  background-color: #28cc75;
+    //}
+    //
+    //&.hover_blue {
+    //  background-color: #298eea;
+    //}
+    //
+    //&.hover_red {
+    //  background-color: #ff6768;
+    //}
+    //
+    //&.hover_yellow {
+    //  background-color: #feee7d;
+    //}
+  }
+}
+//var(--hoverclr, #0f0)

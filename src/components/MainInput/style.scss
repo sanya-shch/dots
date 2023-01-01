@@ -1,0 +1,72 @@
+.main_input {
+  width: 385px;
+  height: 70px;
+  position: relative;
+  user-select: none;
+
+  input {
+    width: 100%;
+    border-radius: 6px;
+    height: 70px;
+    border: 0;
+    padding: 20px 0 0 16px;
+    font-size: 0;
+    background-color: #2e2e31;
+    transition: background 0.3s ease;
+    color: #fffbf1;
+    outline: none;
+    box-shadow: 0 2px 8px -1px #{rgba(#151924, 0.32)};
+
+    &:focus {
+      font-size: 23px;
+      box-shadow: 0 4px 20px -2px #{rgba(#151924, 0.5)};
+    }
+  }
+
+  input,
+  button {
+    position: absolute;
+    height: 70px;
+  }
+
+  button {
+    background-color: #2e2e31;
+    right: 0;
+    border: 0;
+    width: 115px;
+    border-radius: 6px;
+    font-size: 22px;
+    font-weight: 700;
+    cursor: pointer;
+    opacity: 0;
+    color: #fff;
+
+    &.full {
+      width: 100%;
+    }
+  }
+
+  input:focus + label {
+    font-size: 19px;
+    transform: translate(16px, 11px);
+  }
+
+  label {
+    position: absolute;
+    color: #fffbf1;
+    transform: translate(16px, 20px);
+    transition: transform 0.3s ease, font-size 0.3s ease, color 0.3s 0.1s ease;
+    font-size: 28px;
+    cursor: text;
+
+    &.active {
+      font-size: 19px;
+      transform: translate(16px, 11px);
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+
+  input:focus + label + button {
+    opacity: 1;
+  }
+}
