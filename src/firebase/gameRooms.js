@@ -51,7 +51,7 @@ export const startGame = (id, newCurrentPlayerUid) => {
     for (let y = 0; y < 25; y++) {
       row.push(`point-${pointIdx}`);
 
-      points[`point-${pointIdx}`] = 0;
+      points[`point-${pointIdx}`] = { number: 0 };
       pointIdx++;
     }
 

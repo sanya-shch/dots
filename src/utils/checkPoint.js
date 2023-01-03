@@ -1,5 +1,4 @@
 export const checkPoint = (
-  point,
   points,
   gameBoard,
   rowIndex,
@@ -8,11 +7,10 @@ export const checkPoint = (
 ) => {
   const board = gameBoard.map((row) => row.map((item) => item));
   const pointsList = [];
-  let initial = true;
 
-  const getValidWays = (rowIdx, pointIdx, finishRowIdx, finishPointIdx) => {
+  const getValidWays = (rowIdx, pointIdx) => {
     const list = [];
-    console.log(rowIdx, pointIdx, finishRowIdx, finishPointIdx);
+
     if (board[rowIdx - 1] !== undefined) {
       // 0 1 0
       // 0 * 0
@@ -74,7 +72,6 @@ export const checkPoint = (
     return list.filter(
       (item) =>
         points[gameBoard[item.rowIdx][item.pointIdx]].number === colorsData[0]
-      // (item.rowIdx === finishRowIdx && item.pointIdx === finishPointIdx)
     );
   };
 
@@ -86,14 +83,8 @@ export const checkPoint = (
   ) => {
     board[startRowIdx][startPointIdx] = 5;
 
-    const ways = getValidWays(
-      startRowIdx,
-      startPointIdx,
-      finishRowIdx,
-      finishPointIdx
-    );
-    console.log({ startRowIdx, startPointIdx });
-    console.log(ways);
+    const ways = getValidWays(startRowIdx, startPointIdx);
+
     if (ways.length > 0) {
       for (let i = 0; i < ways.length; i++) {
         const current = ways[i];
@@ -109,15 +100,11 @@ export const checkPoint = (
               item.rowIdx !== finishRowIdx && item.pointIdx !== finishPointIdx
           )
           .every((item) => board[item.rowIdx][item.pointIdx] === 5);
-        console.log({i,initial, isSolved, notVisited, current, isAllWaysWalked, board: board.map((row) => row.map((item) => points[item]?.number)) });
+
         if (isSolved && isAllWaysWalked) {
-          // if (initial) {
-          //   initial = false;
-          // } else {
-            console.log("qqqqqqqqqqqqqqqqqqqqqqqqqqqqq", current);
-            pointsList.push(current);
-            return { rowIdx: finishRowIdx, pointIdx: finishPointIdx };
-          // }
+          pointsList.push(current);
+
+          return { rowIdx: finishRowIdx, pointIdx: finishPointIdx };
         }
         if (notVisited) {
           const path = checkPath(
@@ -126,10 +113,10 @@ export const checkPoint = (
             finishRowIdx,
             finishPointIdx
           );
-          console.log("pathpathpathpath", path);
+
           if (path) {
-            console.log("currentcurrentcurrent", current, path);
             pointsList.push(current);
+
             return current;
           }
         }
@@ -141,11 +128,5 @@ export const checkPoint = (
 
   checkPath(rowIndex, pointIndex, rowIndex, pointIndex);
 
-  console.log(
-    // gameBoard.map((row) => row.map((item) => points[item].number)),
-    board.map((row) => row.map((item) => points[item]?.number)),
-    // board.map((row) => row.map((item) => item)),
-    pointsList
-  );
   return pointsList;
 };
