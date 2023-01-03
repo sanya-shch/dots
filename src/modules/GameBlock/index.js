@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { observer } from "mobx-react-lite";
 
 import "./style.scss";
@@ -8,15 +8,18 @@ import { reset, setPoint } from "../../firebase/gameRooms";
 import { getNextPlayerUid } from "../../utils/getNextPlayerUid";
 import { ReactComponent as ResetSvg } from "../../assets/remove-icon.svg";
 import { colors, colorsData, pointColors } from "../../constants";
+import { checkPoint } from "../../utils/checkPoint";
 
 const GameBlock = observer(({ id }) => {
+  const [pointsWall, setPointsWall] = useState(null);
+
   const currentPlayerColor = gameStore.playersList.find(
     (item) => item.uid === gameStore.currentPlayerUid
   ).color;
 
-  const handleClick = async ({ point }) => {
+  const handleClick = async ({ point, rowIndex, pointIndex }) => {
     if (
-      gameStore.points[point] === 0 &&
+      gameStore.points[point].number === 0 &&
       gameStore.currentPlayerUid === gameStore.uuid
     ) {
       const nextPlayerUid = getNextPlayerUid(
@@ -28,12 +31,58 @@ const GameBlock = observer(({ id }) => {
       //   (item) => item.uid === gameStore.currentPlayerUid
       // );
 
+      const pointsList = checkPoint(
+        point,
+        {
+          ...gameStore.points,
+          [point]: {
+            ...gameStore.points[point],
+            number: colorsData[currentPlayerColor][0],
+          },
+        },
+        Object.values(gameStore.gameBoard),
+        rowIndex,
+        pointIndex,
+        colorsData[currentPlayerColor],
+      );
+
+      console.log(pointsList);
+
       await setPoint(
         id,
-        { ...gameStore.points, [point]: colorsData[currentPlayerColor][0] },
+        {
+          ...gameStore.points,
+          [point]: {
+            ...gameStore.points[point],
+            number: colorsData[currentPlayerColor][0],
+          },
+        },
         nextPlayerUid
       );
     }
+  };
+
+  const handleMouseEnter = ({ point, rowIndex, pointIndex }) => {
+    // const pointsList = checkPoint(
+    //   point,
+    //   {
+    //     ...gameStore.points,
+    //     [point]: {
+    //       ...gameStore.points[point],
+    //       number: colorsData[currentPlayerColor][0],
+    //     },
+    //   },
+    //   Object.values(gameStore.gameBoard),
+    //   rowIndex,
+    //   pointIndex,
+    //   colorsData[currentPlayerColor],
+    // );
+    //
+    // if (pointsList.length > 0) setPointsWall(pointsList);
+  };
+
+  const handleMouseLeave = () => {
+    // setPointsWall(null);
   };
 
   const handleClickReset = async () => {
@@ -50,13 +99,16 @@ const GameBlock = observer(({ id }) => {
                 key={`point-${pointIndex}`}
                 className={`point ${
                   gameStore.currentPlayerUid === gameStore.uuid ? "" : "without"
-                } ${gameStore.points[point] ? "colored" : ""}`}
+                } ${gameStore.points[point].number ? "colored" : ""}`}
                 style={{
-                  "--clr": pointColors[gameStore.points[point]],
+                  "--clr": pointColors[gameStore.points[point].number],
                   "--hoverclr": colors[currentPlayerColor],
                 }}
-                onClick={() => handleClick({ point })}
+                onClick={() => handleClick({ point, rowIndex, pointIndex })}
+                onMouseEnter={() => handleMouseEnter({ point, rowIndex, pointIndex })}
+                onMouseLeave={handleMouseLeave}
               >
+                <span />
                 <span />
               </div>
             ))}
