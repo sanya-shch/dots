@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { observer } from "mobx-react-lite";
 
 import "./style.scss";
 
 import gameStore from "../../store/gameStore";
-import { reset, setPoint } from "../../firebase/gameRooms";
+import { setPoint } from "../../firebase/gameRooms";
 import { getNextPlayerUid } from "../../utils/getNextPlayerUid";
-import { ReactComponent as ResetSvg } from "../../assets/remove-icon.svg";
 import { colors, colorsData, pointColors } from "../../constants";
 import { checkPoint } from "../../utils/checkPoint";
 import { fillBlock } from "../../utils/fillBlock";
+import { addWallToPoints } from "../../utils/addWallToPoints";
 
 const GameBlock = observer(({ id }) => {
   // const [pointsWall, setPointsWall] = useState(null);
@@ -46,7 +46,7 @@ const GameBlock = observer(({ id }) => {
         colorsData[currentPlayerColor]
       );
 
-      const filledPointsBoard = fillBlock(
+      const pointsWall = addWallToPoints(
         pointsList,
         {
           ...gameStore.points,
@@ -55,17 +55,32 @@ const GameBlock = observer(({ id }) => {
             number: colorsData[currentPlayerColor][0],
           },
         },
+        Object.values(gameStore.gameBoard)
+      );
+
+      const filledPointsBoard = fillBlock(
+        pointsList,
+        {
+          ...gameStore.points,
+          ...pointsWall,
+          [point]: {
+            ...gameStore.points[point],
+            number: colorsData[currentPlayerColor][0],
+          },
+        },
         Object.values(gameStore.gameBoard),
         colorsData[currentPlayerColor]
       );
-
+      gameStore.points = { ...gameStore.points, ...pointsWall };
       await setPoint(
         id,
         {
           ...gameStore.points,
           ...filledPointsBoard,
+          ...pointsWall,
           [point]: {
             ...gameStore.points[point],
+            ...pointsWall[point],
             number: colorsData[currentPlayerColor][0],
           },
         },
@@ -97,10 +112,6 @@ const GameBlock = observer(({ id }) => {
   //   // setPointsWall(null);
   // };
 
-  const handleClickReset = async () => {
-    await reset(id, gameStore.playersList[0].uid);
-  };
-
   return (
     <div className={`game_block ${currentPlayerColor}`}>
       <div className="game_board">
@@ -129,18 +140,15 @@ const GameBlock = observer(({ id }) => {
                 // }
                 // onMouseLeave={handleMouseLeave}
               >
-                {/*<span />*/}
-                {/*<span />*/}
+                {Object.keys(gameStore.points[point].walls || {}).map(
+                  (item) => (
+                    <span key={`wall-${item}`} className={`wall_${item}`} />
+                  )
+                )}
               </div>
             ))}
           </div>
         ))}
-      </div>
-
-      <div className="info_block">
-        {gameStore.isHost && gameStore.ongoingGame && (
-          <ResetSvg onClick={handleClickReset} />
-        )}
       </div>
     </div>
   );

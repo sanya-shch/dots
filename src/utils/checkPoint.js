@@ -41,7 +41,7 @@ export const checkPoint = (
     }
 
     if (board[rowIdx - 1]?.[pointIdx + 1] !== undefined) {
-      // 0 0 1
+      // 0 0 2
       // 0 * 0
       // 0 0 0
 
@@ -50,19 +50,19 @@ export const checkPoint = (
     if (board[rowIdx + 1]?.[pointIdx + 1] !== undefined) {
       // 0 0 0
       // 0 * 0
-      // 0 0 1
+      // 0 0 4
 
       list.push({ rowIdx: rowIdx + 1, pointIdx: pointIdx + 1 });
     }
     if (board[rowIdx + 1]?.[pointIdx - 1] !== undefined) {
       // 0 0 0
       // 0 * 0
-      // 1 0 0
+      // 6 0 0
 
       list.push({ rowIdx: rowIdx + 1, pointIdx: pointIdx - 1 });
     }
     if (board[rowIdx - 1]?.[pointIdx - 1] !== undefined) {
-      // 1 0 0
+      // 8 0 0
       // 0 * 0
       // 0 0 0
 

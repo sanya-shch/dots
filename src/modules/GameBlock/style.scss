@@ -19,21 +19,6 @@
   &.yellow {
     background-color: #fff9cc;
   }
-
-  .info_block {
-    display: flex;
-    flex-direction: column;
-
-    svg {
-      width: 40px;
-      height: 40px;
-      margin-left: 20px;
-      user-select: none;
-      padding: 4px;
-      fill: #ff6768;
-      cursor: pointer;
-    }
-  }
 }
 
 .game_board {
@@ -86,7 +71,46 @@
       cursor: pointer;
     }
 
-    //span {
-    //}
+    span {
+      &.wall_1 {
+        border: 2px solid var(--clr, #878787);
+        height: 26px;
+        z-index: 1;
+        position: absolute;
+        left: -2px;
+      }
+      &.wall_2 {
+      }
+      &.wall_3 {
+        border: 2px solid var(--clr, #878787);
+        width: 26px;
+        z-index: 1;
+        position: absolute;
+        left: -26px;
+        top: -2px;
+      }
+      &.wall_4 {
+      }
+      &.wall_5 {
+        border: 2px solid var(--clr, #878787);
+        height: 26px;
+        z-index: 1;
+        position: absolute;
+        left: -2px;
+        top: -26px;
+      }
+      &.wall_6 {
+      }
+      &.wall_7 {
+        border: 2px solid var(--clr, #878787);
+        width: 26px;
+        z-index: 1;
+        position: absolute;
+        left: -2px;
+        top: -2px;
+      }
+      &.wall_8 {
+      }
+    }
   }
 }

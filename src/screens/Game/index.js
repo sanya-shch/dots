@@ -47,14 +47,14 @@ const GamePage = observer(() => {
         </Suspense>
       )}
 
-      {gameStore.isWaitStart && <Header />}
+      {gameStore.isWaitStart && <Header id={id} />}
 
       {gameStore.isWaitStart &&
-      (gameStore.ongoingGame ? (
-        <GameBlock id={id} />
-      ) : (
-        <StartBlock id={id} />
-      ))}
+        (gameStore.ongoingGame ? (
+          <GameBlock id={id} />
+        ) : (
+          <StartBlock id={id} />
+        ))}
     </div>
   );
 });
