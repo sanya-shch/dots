@@ -8,7 +8,7 @@ import gameStore from "../../store/gameStore";
 import { ReactComponent as ResetSvg } from "../../assets/remove-icon.svg";
 import { reset } from "../../firebase/gameRooms";
 
-const Header = observer((id) => {
+const Header = observer(({ id }) => {
   const navigate = useNavigate();
 
   const currentPlayerColor = gameStore.playersList.find(
@@ -25,7 +25,7 @@ const Header = observer((id) => {
         gameStore.ongoingGame ? currentPlayerColor : ""
       }`}
     >
-      <div className="header_wrapper">
+      <div className={`header_wrapper ${gameStore.ongoingGame ? "play" : ""}`}>
         <div className="title" onClick={() => navigate("/")}>
           DOTS
         </div>
@@ -38,11 +38,11 @@ const Header = observer((id) => {
               </div>
             ))}
 
-            <div className="info_block">
-              {gameStore.isHost && gameStore.ongoingGame && (
+            {gameStore.isHost && (
+              <div className="info_block">
                 <ResetSvg onClick={handleClickReset} />
-              )}
-            </div>
+              </div>
+            )}
           </div>
         )}
       </div>

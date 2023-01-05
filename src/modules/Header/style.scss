@@ -7,8 +7,12 @@
   .header_wrapper {
     max-width: 1000px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     width: 100%;
+
+    &.play {
+      justify-content: space-between;
+    }
 
     .info_block {
       display: flex;
