@@ -1,6 +1,7 @@
 .home_page {
   background-color: #2e2e31;
   height: 100vh;
+  position: relative;
 
   .input_block {
     display: flex;
@@ -24,31 +25,55 @@
   .title {
     color: #fffbf1;
     user-select: none;
+    position: absolute;
+    top: 25vh;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .background {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    span {
+      position: relative;
+      width: max(3.5vw, 3.5vh);
+      height: max(3.5vw, 3.5vh);
+      display: block;
+    }
+    span::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #878787;
+      border-radius: 50%;
+      pointer-events: none;
+      transition: 2s;
+      transform: scale(0.1);
+    }
+    span:hover::before {
+      transform: scale(1);
+      transition: 0s;
+    }
   }
 }
 
 .button {
-  &.dark {
-    --background: #2f3545;
-    --shadow: 0 2px 8px -1px #{rgba(#151924, 0.32)};
-    --shadow-hover: 0 4px 20px -2px #{rgba(#151924, 0.5)};
-  }
-  &.white {
-    --background: #fff;
-    --text: #275efe;
-    --shadow: 0 2px 8px -1px #{rgba(#121621, 0.04)};
-    --shadow-hover: 0 4px 20px -2px #{rgba(#121621, 0.12)};
-  }
-}
-
-.button {
-  --background: #275efe;
+  --background: #2f3545;
   --text: #fff;
   --font-size: 16px;
   --duration: 0.5s;
   --move-hover: -4px;
-  --shadow: 0 2px 8px -1px #{rgba(#275efe, 0.32)};
-  --shadow-hover: 0 4px 20px -2px #{rgba(#275efe, 0.5)};
+  --shadow: 0 2px 8px -1px #{rgba(#151924, 0.32)};
+  --shadow-hover: 0 4px 20px -2px #{rgba(#151924, 0.5)};
   padding: 16px 32px;
   font-weight: 500;
   line-height: var(--font-size);
@@ -91,30 +116,6 @@
       animation: move var(--duration) linear var(--d);
     }
   }
-  &.smoke {
-    --move: 12px;
-    --move-y: -8px;
-    --blur: 4px;
-    &:hover {
-      span {
-        --duration: 1s;
-        animation: smoke var(--duration) linear var(--d);
-      }
-    }
-  }
-  &.drive {
-    --move: 16px;
-    --skew: 25deg;
-    --skew-fast: 40deg;
-    --skew-bounce: -12px;
-    &:hover {
-      span {
-        --duration: 1s;
-        transform-origin: 50% 100%;
-        animation: drive var(--duration) linear var(--d);
-      }
-    }
-  }
 }
 
 @keyframes move {
@@ -124,49 +125,86 @@
   }
 }
 
-@keyframes smoke {
-  45%,
-  55% {
-    filter: blur(var(--blur));
+.glitch {
+  font-size: 12rem;
+  font-weight: 700;
+  text-transform: uppercase;
+
+  text-shadow: 0.05em 0 0 rgba(255, 103, 104, 0.75),
+    -0.025em -0.05em 0 rgba(40, 204, 117, 0.75),
+    0.025em 0.05em 0 rgba(41, 142, 234, 0.75);
+
+  animation: glitch 500ms infinite;
+}
+
+.glitch span {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.glitch span:first-child {
+  animation: glitch 650ms infinite;
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+  transform: translate(-0.025em, -0.0125em);
+  /* color: green; */
+  opacity: 0.8;
+}
+
+.glitch span:last-child {
+  animation: glitch 375ms infinite;
+  clip-path: polygon(0 80%, 100% 20%, 100% 100%, 0 100%);
+  transform: translate(0.0125em, 0.025em);
+  /* color: red; */
+  opacity: 0.8;
+}
+
+@keyframes glitch {
+  0% {
+    text-shadow: 0.05em 0 0 rgba(255, 103, 104, 0.75),
+      -0.05em -0.025em 0 rgba(40, 204, 117, 0.75),
+      -0.025em 0.05em 0 rgba(41, 142, 234, 0.75);
   }
-  50%,
-  50.1% {
-    opacity: 0;
+  14% {
+    text-shadow: 0.05em 0 0 rgba(255, 103, 104, 0.75),
+      -0.05em -0.025em 0 rgba(40, 204, 117, 0.75),
+      -0.025em 0.05em 0 rgba(41, 142, 234, 0.75);
   }
-  25%,
-  75% {
-    transform: translateX(0);
+  15% {
+    text-shadow: -0.05em -0.025em 0 rgba(255, 103, 104, 0.75),
+      0.025em 0.025em 0 rgba(40, 204, 117, 0.75),
+      -0.05em -0.05em 0 rgba(41, 142, 234, 0.75);
+  }
+  49% {
+    text-shadow: -0.05em -0.025em 0 rgba(255, 103, 104, 0.75),
+      0.025em 0.025em 0 rgba(40, 204, 117, 0.75),
+      -0.05em -0.05em 0 rgba(41, 142, 234, 0.75);
   }
   50% {
-    transform: translateX(var(--move)) translateY(var(--move-y));
+    text-shadow: 0.025em 0.05em 0 rgba(255, 103, 104, 0.75),
+      0.05em 0 0 rgba(40, 204, 117, 0.75), 0 -0.05em 0 rgba(41, 142, 234, 0.75);
   }
-  50.1% {
-    transform: translateX(calc(var(--move) * -1));
+  99% {
+    text-shadow: 0.025em 0.05em 0 rgba(255, 103, 104, 0.75),
+      0.05em 0 0 rgba(40, 204, 117, 0.75), 0 -0.05em 0 rgba(41, 142, 234, 0.75);
   }
-}
-
-@keyframes drive {
-  40% {
-    opacity: 1;
-  }
-  55% {
-    transform: skewX(var(--skew)) translateX(var(--move));
-  }
-  56% {
-    transform: skewX(var(--skew-fast)) translateX(calc(var(--move) * -1));
-  }
-  55%,
-  56% {
-    opacity: 0;
-  }
-  75% {
-    transform: skewX(var(--skew));
-  }
-  85% {
-    transform: skewX(var(--skew-bounce));
+  100% {
+    text-shadow: -0.025em 0 0 rgba(255, 103, 104, 0.75),
+      -0.025em -0.025em 0 rgba(40, 204, 117, 0.75),
+      -0.025em -0.05em 0 rgba(41, 142, 234, 0.75);
   }
 }
 
-//<button className="button">Jumping</button>
-//<button className="button smoke dark">Smoke</button>
-//<button className="button drive white">Drive</button>
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
+}
