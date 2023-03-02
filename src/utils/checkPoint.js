@@ -6,7 +6,6 @@ export const checkPoint = (
   colorsData
 ) => {
   const board = gameBoard.map((row) => row.map((item) => item));
-  const pointsList = [];
 
   const getValidWays = (rowIdx, pointIdx) => {
     const list = [];
@@ -18,19 +17,12 @@ export const checkPoint = (
 
       list.push({ rowIdx: rowIdx - 1, pointIdx });
     }
-    if (board[rowIdx + 1] !== undefined) {
-      // 0 0 0
+    if (board[rowIdx - 1]?.[pointIdx + 1] !== undefined) {
+      // 0 0 2
       // 0 * 0
-      // 0 5 0
-
-      list.push({ rowIdx: rowIdx + 1, pointIdx });
-    }
-    if (board[rowIdx][pointIdx - 1] !== undefined) {
-      // 0 0 0
-      // 7 * 0
       // 0 0 0
 
-      list.push({ rowIdx, pointIdx: pointIdx - 1 });
+      list.push({ rowIdx: rowIdx - 1, pointIdx: pointIdx + 1 });
     }
     if (board[rowIdx][pointIdx + 1] !== undefined) {
       // 0 0 0
@@ -39,14 +31,6 @@ export const checkPoint = (
 
       list.push({ rowIdx, pointIdx: pointIdx + 1 });
     }
-
-    if (board[rowIdx - 1]?.[pointIdx + 1] !== undefined) {
-      // 0 0 2
-      // 0 * 0
-      // 0 0 0
-
-      list.push({ rowIdx: rowIdx - 1, pointIdx: pointIdx + 1 });
-    }
     if (board[rowIdx + 1]?.[pointIdx + 1] !== undefined) {
       // 0 0 0
       // 0 * 0
@@ -54,12 +38,26 @@ export const checkPoint = (
 
       list.push({ rowIdx: rowIdx + 1, pointIdx: pointIdx + 1 });
     }
+    if (board[rowIdx + 1] !== undefined) {
+      // 0 0 0
+      // 0 * 0
+      // 0 5 0
+
+      list.push({ rowIdx: rowIdx + 1, pointIdx });
+    }
     if (board[rowIdx + 1]?.[pointIdx - 1] !== undefined) {
       // 0 0 0
       // 0 * 0
       // 6 0 0
 
       list.push({ rowIdx: rowIdx + 1, pointIdx: pointIdx - 1 });
+    }
+    if (board[rowIdx][pointIdx - 1] !== undefined) {
+      // 0 0 0
+      // 7 * 0
+      // 0 0 0
+
+      list.push({ rowIdx, pointIdx: pointIdx - 1 });
     }
     if (board[rowIdx - 1]?.[pointIdx - 1] !== undefined) {
       // 8 0 0
@@ -79,54 +77,50 @@ export const checkPoint = (
     startRowIdx,
     startPointIdx,
     finishRowIdx,
-    finishPointIdx
+    finishPointIdx,
+    lastRowIdx,
+    lastPointIdx
   ) => {
-    board[startRowIdx][startPointIdx] = 5;
+    const ways = getValidWays(startRowIdx, startPointIdx).filter(
+      ({ rowIdx, pointIdx }) =>
+        board[rowIdx][pointIdx] !== 5 &&
+        board[rowIdx][pointIdx] !== 4 &&
+        !(lastRowIdx === rowIdx && lastPointIdx === pointIdx)
+    );
 
-    const ways = getValidWays(startRowIdx, startPointIdx);
-
-    if (ways.length > 0) {
-      for (let i = 0; i < ways.length; i++) {
-        const current = ways[i];
-
-        const isSolved =
-          current.rowIdx === finishRowIdx &&
-          current.pointIdx === finishPointIdx;
-        const notVisited = board[current.rowIdx][current.pointIdx] !== 5;
-
-        const isAllWaysWalked = ways
-          .filter(
-            (item) =>
-              item.rowIdx !== finishRowIdx && item.pointIdx !== finishPointIdx
-          )
-          .every((item) => board[item.rowIdx][item.pointIdx] === 5);
-
-        if (isSolved && isAllWaysWalked) {
-          pointsList.push(current);
-
-          return { rowIdx: finishRowIdx, pointIdx: finishPointIdx };
-        }
-        if (notVisited) {
-          const path = checkPath(
-            current.rowIdx,
-            current.pointIdx,
-            finishRowIdx,
-            finishPointIdx
-          );
-
-          if (path) {
-            pointsList.push(current);
-
-            return current;
-          }
-        }
-      }
+    if (ways.length === 0) {
+      return false;
     }
 
-    return false;
+    for (let i = 0; i < ways.length; i++) {
+      const current = ways[i];
+
+      if (board[current.rowIdx][current.pointIdx] === 10) {
+        return [{ rowIdx: finishRowIdx, pointIdx: finishPointIdx }];
+      }
+
+      board[current.rowIdx][current.pointIdx] = 5;
+
+      const path = checkPath(
+        current.rowIdx,
+        current.pointIdx,
+        finishRowIdx,
+        finishPointIdx,
+        startRowIdx,
+        startPointIdx
+      );
+
+      if (path) {
+        return [current, ...path];
+      } else {
+        board[current.rowIdx][current.pointIdx] = 4;
+      }
+    }
   };
 
-  checkPath(rowIndex, pointIndex, rowIndex, pointIndex);
+  board[rowIndex][pointIndex] = 10;
 
-  return pointsList;
+  const pointsList = checkPath(rowIndex, pointIndex, rowIndex, pointIndex, rowIndex, pointIndex);
+
+  return pointsList?.length >= 4 ? pointsList : [];
 };
