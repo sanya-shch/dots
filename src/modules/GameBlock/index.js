@@ -12,7 +12,7 @@ import { fillBlock } from "../../utils/fillBlock";
 import { addWallToPoints } from "../../utils/addWallToPoints";
 
 const GameBlock = observer(({ id }) => {
-  // const [pointsWall, setPointsWall] = useState(null);
+  const [pointsWallList, setPointsWallList] = React.useState(null);
 
   const currentPlayerColor = gameStore.playersList.find(
     (item) => item.uid === gameStore.currentPlayerUid
@@ -27,10 +27,6 @@ const GameBlock = observer(({ id }) => {
         gameStore.playersList,
         gameStore.currentPlayerUid
       );
-
-      // const currentPlayerIndex = gameStore.playersList.findIndex(
-      //   (item) => item.uid === gameStore.currentPlayerUid
-      // );
 
       const pointsList = checkPoint(
         {
@@ -89,28 +85,39 @@ const GameBlock = observer(({ id }) => {
     }
   };
 
-  // const handleMouseEnter = ({ point, rowIndex, pointIndex }) => {
-  //   // const pointsList = checkPoint(
-  //   //   point,
-  //   //   {
-  //   //     ...gameStore.points,
-  //   //     [point]: {
-  //   //       ...gameStore.points[point],
-  //   //       number: colorsData[currentPlayerColor][0],
-  //   //     },
-  //   //   },
-  //   //   Object.values(gameStore.gameBoard),
-  //   //   rowIndex,
-  //   //   pointIndex,
-  //   //   colorsData[currentPlayerColor],
-  //   // );
-  //   //
-  //   // if (pointsList.length > 0) setPointsWall(pointsList);
-  // };
+  const handleMouseEnter = ({ point, rowIndex, pointIndex }) => {
+    const pointsList = checkPoint(
+      {
+        ...gameStore.points,
+        [point]: {
+          ...gameStore.points[point],
+          number: colorsData[currentPlayerColor][0],
+        },
+      },
+      Object.values(gameStore.gameBoard),
+      rowIndex,
+      pointIndex,
+      colorsData[currentPlayerColor]
+    );
 
-  // const handleMouseLeave = () => {
-  //   // setPointsWall(null);
-  // };
+    const pointsWall = addWallToPoints(
+      pointsList,
+      {
+        ...gameStore.points,
+        [point]: {
+          ...gameStore.points[point],
+          number: colorsData[currentPlayerColor][0],
+        },
+      },
+      Object.values(gameStore.gameBoard)
+    );
+
+    if (pointsList.length > 0) setPointsWallList(pointsWall);
+  };
+
+  const handleMouseLeave = () => {
+    setPointsWallList(null);
+  };
 
   return (
     <div className={`game_block ${currentPlayerColor}`}>
@@ -126,25 +133,35 @@ const GameBlock = observer(({ id }) => {
                   gameStore.points[point].number === 1 ||
                   gameStore.points[point].number === 2 ||
                   gameStore.points[point].number === 3 ||
-                  gameStore.points[point].number === 4
+                  gameStore.points[point].number === 4 ||
+                  pointsWallList?.[point]?.number === 1 ||
+                  pointsWallList?.[point]?.number === 2 ||
+                  pointsWallList?.[point]?.number === 3 ||
+                  pointsWallList?.[point]?.number === 4
                     ? "colored"
                     : ""
                 } ${gameStore.points[point].number === 0 ? "" : "not_hover"}`}
                 style={{
-                  "--clr": pointColors[gameStore.points[point].number],
+                  "--clr":
+                    pointColors[
+                      pointsWallList?.[point]?.number ||
+                        gameStore.points[point].number
+                    ],
                   "--hoverclr": colors[currentPlayerColor],
                 }}
                 onClick={() => handleClick({ point, rowIndex, pointIndex })}
-                // onMouseEnter={() =>
-                //   handleMouseEnter({ point, rowIndex, pointIndex })
-                // }
-                // onMouseLeave={handleMouseLeave}
+                onMouseEnter={() =>
+                  handleMouseEnter({ point, rowIndex, pointIndex })
+                }
+                onMouseLeave={handleMouseLeave}
               >
-                {Object.keys(gameStore.points[point].walls || {}).map(
-                  (item) => (
-                    <span key={`wall-${item}`} className={`wall_${item}`} />
-                  )
-                )}
+                {Object.keys(
+                  pointsWallList?.[point]?.walls ||
+                    gameStore.points[point].walls ||
+                    {}
+                ).map((item) => (
+                  <span key={`wall-${item}`} className={`wall_${item}`} />
+                ))}
               </div>
             ))}
           </div>
